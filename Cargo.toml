@@ -5,5 +5,7 @@ version = "0.0.1"
 authors = ["Cam Jackson <camjackson89@gmail.com>"]
 
 [dependencies.glium]
-
 path = "../glium"
+
+[dependencies.glutin]
+git = "https://github.com/tomaka/glutin"

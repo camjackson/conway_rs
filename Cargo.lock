@@ -2,159 +2,214 @@
 name = "conway_rs"
 version = "0.0.1"
 dependencies = [
- "glium 0.0.2",
+ "glium 0.1.3",
+ "glutin 0.0.13 (git+https://github.com/tomaka/glutin)",
 ]
 
 [[package]]
 name = "android_glue"
 version = "0.0.1"
-source = "git+https://github.com/tomaka/android-rs-glue#7e930d2822adb791a515c24dfefe6ae37493f40f"
-dependencies = [
- "compile_msg 0.1.3 (git+https://github.com/huonw/compile_msg)",
-]
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "bitflags"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "cgmath"
-version = "0.0.1"
-source = "git+https://github.com/bjz/cgmath-rs#9bb77e6a45a545fe016a2e2f60ccf156e8006a5c"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "rustc-serialize 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rand 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rustc-serialize 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
-name = "cocoa"
-version = "0.1.1"
-source = "git+https://github.com/servo/rust-cocoa#06ad6e2863c58aab102b76f766bd8809b822a805"
-
-[[package]]
-name = "compile_msg"
-version = "0.1.3"
-source = "git+https://github.com/huonw/compile_msg#b19da50cacf5b11bbc065da6b449f6b4fe7c019a"
-
-[[package]]
-name = "core_foundation"
-version = "0.1.0"
-source = "git+https://github.com/servo/rust-core-foundation#ce3d852765827b64a0d5fb2aadd77da39665b0b0"
-
-[[package]]
-name = "core_graphics"
-version = "0.1.0"
-source = "git+https://github.com/servo/rust-core-graphics#9434e2bda65d259f825104170b5fa6cc6dbaf5a9"
+name = "gdi32-sys"
+version = "0.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "core_foundation 0.1.0 (git+https://github.com/servo/rust-core-foundation)",
+ "winapi 0.1.15 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "gl_common"
-version = "0.0.3"
+version = "0.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "libc 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "gl_generator"
-version = "0.0.12"
+version = "0.0.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "gl_common 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "khronos_api 0.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "log 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
- "xml-rs 0.1.13 (registry+https://github.com/rust-lang/crates.io-index)",
+ "khronos_api 0.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "xml-rs 0.1.21 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "glium"
-version = "0.0.2"
+version = "0.1.3"
 dependencies = [
- "cgmath 0.0.1 (git+https://github.com/bjz/cgmath-rs)",
- "compile_msg 0.1.3 (git+https://github.com/huonw/compile_msg)",
- "gl_common 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "gl_generator 0.0.12 (registry+https://github.com/rust-lang/crates.io-index)",
- "glutin 0.0.4-pre (git+http://github.com/tomaka/glutin)",
- "image 0.2.0-alpha.4 (git+https://github.com/PistonDevelopers/image)",
- "nalgebra 0.2.0 (git+https://github.com/sebcrozet/nalgebra)",
+ "cgmath 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gl_common 0.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gl_generator 0.0.21 (registry+https://github.com/rust-lang/crates.io-index)",
+ "glutin 0.0.13 (git+https://github.com/tomaka/glutin)",
+ "image 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "khronos_api 0.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nalgebra 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "glutin"
-version = "0.0.4-pre"
-source = "git+http://github.com/tomaka/glutin#b6f3bfa76811db8c249af08066bfb37bb1385165"
+version = "0.0.13"
+source = "git+https://github.com/tomaka/glutin#8c78cabcf29f7a04ceffdafb597824759870e574"
 dependencies = [
- "android_glue 0.0.1 (git+https://github.com/tomaka/android-rs-glue)",
- "cocoa 0.1.1 (git+https://github.com/servo/rust-cocoa)",
- "core_foundation 0.1.0 (git+https://github.com/servo/rust-core-foundation)",
- "core_graphics 0.1.0 (git+https://github.com/servo/rust-core-graphics)",
- "gl_common 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "gl_generator 0.0.12 (registry+https://github.com/rust-lang/crates.io-index)",
+ "android_glue 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gdi32-sys 0.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gl_common 0.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gl_generator 0.0.21 (registry+https://github.com/rust-lang/crates.io-index)",
+ "glutin_cocoa 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "glutin_core_foundation 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "glutin_core_graphics 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "kernel32-sys 0.0.11 (registry+https://github.com/rust-lang/crates.io-index)",
  "khronos_api 0.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "winapi 0.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "user32-sys 0.0.11 (registry+https://github.com/rust-lang/crates.io-index)",
+ "winapi 0.1.15 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "glutin_cocoa"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "bitflags 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "glutin_core_foundation"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "libc 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "glutin_core_graphics"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "glutin_core_foundation 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "image"
-version = "0.2.0-alpha.4"
-source = "git+https://github.com/PistonDevelopers/image#2b1b6bfb00441ba9f678dfc745e9aa1ce9a29927"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "num 0.1.8 (git+https://github.com/rust-lang/num)",
+ "num 0.1.17 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "kernel32-sys"
+version = "0.0.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "winapi 0.1.15 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "khronos_api"
-version = "0.0.4"
+version = "0.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "khronos_api"
-version = "0.0.5"
+name = "libc"
+version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "log"
-version = "0.1.9"
+version = "0.2.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "log"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "regex 0.1.10 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "nalgebra"
-version = "0.2.0"
-source = "git+https://github.com/sebcrozet/nalgebra#713589ff508b30a3dedc676e9f9fd26f791f2509"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "rustc-serialize 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rand 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rustc-serialize 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "num"
-version = "0.1.8"
-source = "git+https://github.com/rust-lang/num#bde434903d496bee0466cfeaeb1346638c0d247f"
+version = "0.1.17"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "rustc-serialize 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rand 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rustc-serialize 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
-name = "regex"
-version = "0.1.10"
+name = "rand"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "libc 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "rand"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "libc 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "rustc-serialize"
-version = "0.2.8"
+version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "user32-sys"
+version = "0.0.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "winapi 0.1.15 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "winapi"
-version = "0.0.5"
+version = "0.1.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "libc 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "xml-rs"
-version = "0.1.13"
+version = "0.1.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "bitflags 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "bitflags 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
