@@ -7,10 +7,7 @@ use glium::Surface;
 
 use std::thread;
 
-pub enum Action {
-	Stop,
-	Continue,
-}
+mod shaders;
 
 fn main() {
 	use glium::DisplayBuild;
@@ -48,37 +45,7 @@ fn main() {
 	let index_buffer = glium::IndexBuffer::new(&display,
 		glium::index::TrianglesList(vec![0u16, 1, 2]));
 
-	let program = glium::Program::from_source(&display,
-		// vertex shader
-		"	#version 330
-
-			uniform mat4 matrix;
-
-			in vec2 position;
-			in vec3 color;
-
-			out vec3 vColor;
-
-			void main() {
-				gl_Position = vec4(position, 0.0, 1.0) * matrix;
-				vColor = color;
-			}
-		",
-
-		// fragment shader
-		"	#version 330
-
-			in vec3 vColor;
-			out vec4 color;
-
-			void main() {
-				color = vec4(vColor, 1.0);
-			}
-		",
-
-		// geometry shader
-		None
-	).unwrap();
+	let program = glium::Program::from_source(&display, &shaders::load("vertex"), &shaders::load("fragment"), None).unwrap();
 
 	let mut accumulator = 0;
 	let mut previous_clock = clock_ticks::precise_time_ns();
