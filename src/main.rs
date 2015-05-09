@@ -8,6 +8,7 @@ use glium::Surface;
 use std::thread;
 
 mod shaders;
+mod shapes;
 
 fn main() {
 	use glium::DisplayBuild;
@@ -18,33 +19,7 @@ fn main() {
 		.build_glium()
 		.unwrap();
 
-	let vertex_buffer = {
-		#[derive(Copy)]
-		struct Vertex {
-			position: [f32; 2],
-			color: [f32; 3],
-		}
-
-		impl Clone for Vertex {
-			fn clone(&self) -> Vertex {
-				return *self
-			}
-		}
-
-		implement_vertex!(Vertex, position, color);
-
-		glium::VertexBuffer::new(&display,
-			vec![
-				Vertex { position: [-0.5, -0.5], color: [0.0, 1.0, 0.0] },
-				Vertex { position: [ 0.0,  0.5], color: [0.0, 0.0, 1.0] },
-				Vertex { position: [ 0.5, -0.5], color: [1.0, 0.0, 0.0] },
-			]
-		)
-	};
-
-	let index_buffer = glium::IndexBuffer::new(&display,
-		glium::index::TrianglesList(vec![0u16, 1, 2]));
-
+	let (vertex_buffer, index_buffer) = shapes::square(&display);
 	let program = glium::Program::from_source(&display, &shaders::load("vertex"), &shaders::load("fragment"), None).unwrap();
 
 	let mut accumulator = 0;
