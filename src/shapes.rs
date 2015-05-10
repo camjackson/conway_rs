@@ -9,29 +9,24 @@ pub fn square(display: &Display) -> (VertexBufferAny, IndexBuffer) {
 	(vb(display), ib(display))
 }
 
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 struct Vertex {
 	position: [f32; 2],
 	color: [f32; 3],
 }
 
-impl Clone for Vertex {
-	fn clone(&self) -> Vertex {
-		return *self
-	}
-}
-
 implement_vertex!(Vertex, position, color);
 
 fn vb(display: &Display) -> VertexBufferAny {
-	let black = [0.1, 0.1, 0.1];
+	let col = [0.1, 0.1, 0.1];
+	let size = 20.0;
 
 	glium::VertexBuffer::new(display,
 		vec![
-			Vertex { position: [ 0.0, 0.0], color: black },
-			Vertex { position: [ 0.0, 1.0], color: black },
-			Vertex { position: [ 1.0, 1.0], color: black },
-			Vertex { position: [ 1.0, 0.0], color: black },
+			Vertex { position: [  0.0,  0.0], color: col },
+			Vertex { position: [  0.0, size], color: col },
+			Vertex { position: [ size, size], color: col },
+			Vertex { position: [ size,  0.0], color: col },
 		]
 	).into_vertex_buffer_any()
 }

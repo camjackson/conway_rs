@@ -13,8 +13,10 @@ mod shapes;
 fn main() {
 	use glium::DisplayBuild;
 
+	let width = 1024.0;
+	let height = 768.0;
 	let display = glutin::WindowBuilder::new()
-		.with_dimensions(1024, 768)
+		.with_dimensions(width as u32, height as u32)
 		.with_title(format!("Hello, world!"))
 		.build_glium()
 		.unwrap();
@@ -27,11 +29,11 @@ fn main() {
 
 	loop {
 		let uniforms = uniform! {
-			matrix: [
-				[1.0, 0.0, 0.0, 0.0],
-				[0.0, 1.0, 0.0, 0.0],
-				[0.0, 0.0, 1.0, 0.0],
-				[0.0, 0.0, 0.0, 1.0f32]
+			transform: [
+				[1.0 / width, 0.0         , 0.0, 0.0],
+				[0.0        , 1.0 / height, 0.0, 0.0],
+				[0.0        , 0.0         , 1.0, 0.0],
+				[0.0        , 0.0         , 0.0, 1.0f32]
 			]
 		};
 
