@@ -5,7 +5,8 @@ extern crate glutin;
 use glium::Surface;
 
 mod shaders;
-mod shapes;
+mod square;
+mod grid;
 
 fn main() {
 	use glium::DisplayBuild;
@@ -18,7 +19,9 @@ fn main() {
 		.build_glium()
 		.unwrap();
 
-	let (vertices, instances, indices) = shapes::squares(&display);
+	let square_size = 32.0;
+
+	let (vertices, indices) = square::geometry(&display, square_size);
 	let program = glium::Program::from_source(&display, &shaders::load("vertex"), &shaders::load("fragment"), None).unwrap();
 
 	let uniforms = uniform! {
@@ -29,6 +32,9 @@ fn main() {
 			[0.0        , 0.0         , 0.0, 1.0f32]
 		]
 	};
+
+	let grid = grid::new(64, 48, square_size);
+	let instances = square::instances(&display, grid);
 
 	loop {
 		let mut frame = display.draw();
