@@ -1,4 +1,5 @@
 use rand;
+use std::collections::HashMap;
 
 use cell::Cell;
 
@@ -28,8 +29,15 @@ pub fn new(width: i16, height: i16, square_size: f32) -> Grid {
 }
 
 fn starts_alive(x: i16, y: i16) -> bool {
+    let mut seeds: HashMap<&str, fn(i16, i16) -> bool> = HashMap::new();
+    seeds.insert("random", random);
+    seeds.insert("diehard", diehard);
+    seeds.insert("gosper_glider", gosper_glider);
     //change here to switch between seeds
-    gosper_glider(x, y)
+    match seeds.get("gosper_glider"){
+        Some(f) => f(x, y),
+        None => false
+    }
 }
 
 fn random(_: i16, _: i16) -> bool {

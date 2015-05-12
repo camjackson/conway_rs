@@ -4,6 +4,7 @@ use glium::Display;
 use glium::vertex::VertexBufferAny;
 use glium::vertex::VertexBuffer;
 use glium::index::IndexBuffer;
+use glium::index::TrianglesList;
 
 use cell::Cell;
 
@@ -20,9 +21,9 @@ fn vertices(display: &Display, size: f32) -> VertexBufferAny {
 
     implement_vertex!(Vertex, position, color);
 
-    let colour = [0.2, 0.2, 0.2]
+    let colour = [0.2, 0.2, 0.2];
 
-    glium::VertexBuffer::new(display,
+    VertexBuffer::new(display,
         vec![
             Vertex { position: [  0.0,  0.0], color: colour },
             Vertex { position: [  0.0, size], color: colour },
@@ -33,7 +34,7 @@ fn vertices(display: &Display, size: f32) -> VertexBufferAny {
 }
 
 fn indices(display: &Display) -> IndexBuffer {
-        glium::IndexBuffer::new(display, glium::index::TrianglesList(vec![0u16, 1, 2, 0, 2, 3]))
+    IndexBuffer::new(display, TrianglesList(vec![0u16, 1, 2, 0, 2, 3]))
 }
 
 pub fn instances(display: &Display, grid: &Vec<Cell>) -> VertexBuffer<Location> {
@@ -46,7 +47,7 @@ pub fn instances(display: &Display, grid: &Vec<Cell>) -> VertexBuffer<Location> 
         })
     }
 
-    glium::vertex::VertexBuffer::new(display, data)
+    VertexBuffer::new(display, data)
 }
 
 #[derive(Copy, Clone)]
