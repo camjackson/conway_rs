@@ -1,16 +1,21 @@
 #[macro_use]
 extern crate glium;
 extern crate glutin;
+extern crate clock_ticks;
+extern crate rand;
 
+use glium::DisplayBuild;
 use glium::Surface;
+use glium::Program;
+use clock_ticks::precise_time_ns;
 
 mod shaders;
 mod square;
 mod grid;
+mod cell;
+
 
 fn main() {
-    use glium::DisplayBuild;
-
     let width = 1024.0;
     let height = 768.0;
     let display = glutin::WindowBuilder::new()
@@ -19,10 +24,10 @@ fn main() {
         .build_glium()
         .unwrap();
 
-    let square_size = 32.0;
+    let square_size = 16.0;
 
     let (vertices, indices) = square::geometry(&display, square_size);
-    let program = glium::Program::from_source(&display, &shaders::load("vertex"), &shaders::load("fragment"), None).unwrap();
+    let program = Program::from_source(&display, &shaders::load("vertex"), &shaders::load("fragment"), None).unwrap();
 
     let uniforms = uniform! {
         transform: [
@@ -33,10 +38,14 @@ fn main() {
         ]
     };
 
-    let grid = grid::new(64, 48, square_size);
-    let instances = square::instances(&display, grid);
+    let mut grid = grid::new(128, 96, square_size);
+
+    let mut accumulator = 0;
+    let mut previous_clock = precise_time_ns();
 
     loop {
+        let instances = square::instances(&display, &grid.cells);
+
         let mut frame = display.draw();
         frame.clear_color(1.0, 1.0, 1.0, 1.0);
         frame.draw((&vertices, instances.per_instance_if_supported().unwrap()), &indices, &program, &uniforms, &std::default::Default::default()).unwrap();
@@ -48,5 +57,18 @@ fn main() {
                 _ => ()
             }
         }
+
+        let now = precise_time_ns();
+        accumulator += now - previous_clock;
+        previous_clock = now;
+
+        const FIXED_TIME_STAMP: u64 = 16666667; //every 16.67ms, or 60fps
+        while accumulator >= FIXED_TIME_STAMP {
+            accumulator -= FIXED_TIME_STAMP;
+
+            grid.update();
+        }
+
+//        thread::sleep_ms(((FIXED_TIME_STAMP - accumulator) / 1000000) as u32);
     }
 }
