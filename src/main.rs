@@ -13,7 +13,7 @@ mod shaders;
 mod square;
 mod grid;
 mod cell;
-
+mod seeds;
 
 fn main() {
     let width = 1024.0;

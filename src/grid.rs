@@ -1,12 +1,11 @@
-use rand;
+use std::env;
 use std::collections::HashMap;
 
 use cell::Cell;
+use seeds;
 
 pub struct Grid {
     pub cells: Vec<Cell>,
-    width: i16,
-    height: i16,
 }
 
 pub fn new(width: i16, height: i16, square_size: f32) -> Grid {
@@ -16,169 +15,82 @@ pub fn new(width: i16, height: i16, square_size: f32) -> Grid {
             cells.push(Cell {
                 x: (x - width / 2) as f32 * square_size,
                 y: (y - height / 2) as f32 * square_size,
-                neighbours: vec![
+                neighbours: [
                     (x-1, y-1), (x, y-1), (x+1, y-1),
                     (x-1, y  ),           (x+1, y  ),
                     (x-1, y+1), (x, y+1), (x+1, y+1)
-                ],
+                ].iter().map(|n| coords_to_index(*n, width, height)).collect(),
                 alive: starts_alive(x, y),
             });
         }
     }
-    Grid{ cells: cells, width: width, height: height }
+    Grid{ cells: cells }
+}
+
+fn coords_to_index(coords: (i16, i16), grid_width: i16, grid_height: i16) -> usize {
+    let (x, y) = coords;
+    let x_wrapped = (x + grid_width) % grid_width;
+    let y_wrapped = (y + grid_height) % grid_height;
+    (x_wrapped + (y_wrapped * grid_width)) as usize
 }
 
 fn starts_alive(x: i16, y: i16) -> bool {
     let mut seeds: HashMap<&str, fn(i16, i16) -> bool> = HashMap::new();
-    seeds.insert("random", random);
-    seeds.insert("diehard", diehard);
-    seeds.insert("gosper_glider", gosper_glider);
-    //change here to switch between seeds
-    match seeds.get("gosper_glider"){
+    seeds.insert("random", seeds::random);
+    seeds.insert("diehard", seeds::diehard);
+    seeds.insert("gosper_glider", seeds::gosper_glider);
+
+    let arg = env::args().nth(1).unwrap();
+    match seeds.get(&*arg) {
         Some(f) => f(x, y),
         None => false
-    }
-}
-
-fn random(_: i16, _: i16) -> bool {
-    rand::random::<u8>() % 2 == 0
-}
-
-fn diehard(x: i16, y: i16) -> bool {
-    match (x, y) {
-        (31, 22) => true,
-        (32, 21) => true,
-        (32, 22) => true,
-        (36, 21) => true,
-        (37, 21) => true,
-        (38, 21) => true,
-        (37, 23) => true,
-        _ => false
-    }
-}
-
-fn gosper_glider(x: i16, y: i16) -> bool {
-    match (x, y) {
-        (1, 4) => true,
-        (1, 5) => true,
-        (2, 4) => true,
-        (2, 5) => true,
-
-        (11, 3) => true,
-        (11, 4) => true,
-        (11, 5) => true,
-
-        (12, 2) => true,
-        (12, 6) => true,
-
-        (13, 1) => true,
-        (13, 7) => true,
-        (14, 1) => true,
-        (14, 7) => true,
-
-        (15, 4) => true,
-
-        (16, 2) => true,
-        (16, 6) => true,
-
-        (17, 3) => true,
-        (17, 4) => true,
-        (17, 5) => true,
-
-        (18, 4) => true,
-
-        (21, 5) => true,
-        (21, 6) => true,
-        (21, 7) => true,
-
-        (22, 5) => true,
-        (22, 6) => true,
-        (22, 7) => true,
-
-        (23, 4) => true,
-        (23, 8) => true,
-
-        (25, 3) => true,
-        (25, 4) => true,
-        (25, 8) => true,
-        (25, 9) => true,
-
-        (35, 6) => true,
-        (35, 7) => true,
-        (36, 6) => true,
-        (36, 7) => true,
-
-        _ => false
     }
 }
 
 impl Grid {
     pub fn update(&mut self) {
         let mut alive_neighbours = Vec::new();
-
         for cell in self.cells.iter() {
-            let mut alive_count = 0;
-            for neighbour in cell.neighbours.iter() {
-                if self.cells[self.coords_to_index(*neighbour)].alive {
-                    alive_count += 1;
-                }
-            }
-            alive_neighbours.push(alive_count)
+            alive_neighbours.push(cell.neighbours.iter().filter(|n| self.cells[**n].alive).count())
         }
-//        for cell in self.cells.iter() {
-//            alive_neighbours.push(cell.neighbours.iter().filter(|n| self.cells[self.coords_to_index(**n)].alive).count())
-//        }
 
         for (cell, cell_alive_neighbours) in self.cells.iter_mut().zip(alive_neighbours.iter()) {
             cell.update(*cell_alive_neighbours)
         }
     }
-
-    fn coords_to_index(&self, coords: (i16, i16)) -> usize {
-        let (x, y) = coords;
-        // assumes that x and y won't underflow more than once
-        let x_wrapped = (x + self.width) % self.width;
-        let y_wrapped = (y + self.height) % self.height;
-        (x_wrapped + (y_wrapped * self.width)) as usize
-    }
 }
-
 
 #[cfg(test)]
 mod tests {
     use super::coords_to_index;
 
-    fn new_grid() {
-        Grid{ cells: Vec::new(), width: 5, height: 3 }
-    }
-
     #[test]
     fn it_returns_the_x_value_on_the_first_row() {
-        assert!(new_grid().coords_to_index((3, 0)) == 3)
+        assert!(coords_to_index((3, 0), 5, 3) == 3)
     }
 
     #[test]
     fn it_wraps_overflowing_x_values() {
-        assert!(new_grid().coords_to_index((6, 0)) == 1)
+        assert!(coords_to_index((6, 0), 5, 3) == 1)
     }
 
     #[test]
     fn it_wraps_underflowing_x_values() {
-        assert!(new_grid().coords_to_index((-1, 0)) == 4)
+        assert!(coords_to_index((-1, 0), 5, 3) == 4)
     }
 
     #[test]
     fn it_adds_one_width_for_each_row() {
-        assert!(new_grid().coords_to_index((2, 2)) == 12)
+        assert!(coords_to_index((2, 2), 5, 3) == 12)
     }
 
     #[test]
     fn it_wraps_overflowing_y_values() {
-        assert!(new_grid().coords_to_index((1, 5)) == 11)
+        assert!(coords_to_index((1, 5), 5, 3) == 11)
     }
 
     #[test]
     fn it_wraps_underflowing_y_values() {
-        assert!(new_grid().coords_to_index((4, -2)) == 9)
+        assert!(coords_to_index((4, -2), 5, 3) == 9)
     }
 }
