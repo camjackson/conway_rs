@@ -5,7 +5,15 @@ leading up to the first stable release.
 
 It has a 128x96 grid, wrapping on both axes, and rendered using OpenGL, with [glium](http://github.com/tomaka/glium).
 
-Run it with `cargo run`.
+Run it with `cargo run <seed_name>`. Valid seeds are `random`, `diehard`, and `gosper_glider`.
 
-The code looks OK to me, but I'm still learning the basics of Rust, so I'd be keen to get any feed back (or even pull
+From a random seed:
+
+[!random image](random.png)
+
+From the glider seed:
+
+[!glider image](glider.png)
+
+The code looks OK to me, but I'm still learning the basics of Rust, so I'd be keen to get any feedback (or even pull
 requests!) to help me improve the code :)
