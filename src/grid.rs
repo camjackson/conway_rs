@@ -1,6 +1,3 @@
-use std::env;
-use std::collections::HashMap;
-
 use cell::Cell;
 use seeds;
 
@@ -10,6 +7,12 @@ pub struct Grid {
 
 pub fn new(width: i16, height: i16, square_size: f32) -> Grid {
     let mut cells = Vec::new();
+
+    let starts_alive = match seeds::get_fn() {
+        Some(f) => f,
+        None => panic!("You must provide a seed name! Valid seeds are random, diehard, and gosper_glider")
+    };
+
     for y in (0i16 .. height) {
         for x in (0i16 .. width) {
             cells.push(Cell {
@@ -32,19 +35,6 @@ fn coords_to_index(coords: (i16, i16), grid_width: i16, grid_height: i16) -> usi
     let x_wrapped = (x + grid_width) % grid_width;
     let y_wrapped = (y + grid_height) % grid_height;
     (x_wrapped + (y_wrapped * grid_width)) as usize
-}
-
-fn starts_alive(x: i16, y: i16) -> bool {
-    let mut seeds: HashMap<&str, fn(i16, i16) -> bool> = HashMap::new();
-    seeds.insert("random", seeds::random);
-    seeds.insert("diehard", seeds::diehard);
-    seeds.insert("gosper_glider", seeds::gosper_glider);
-
-    let arg = env::args().nth(1).unwrap();
-    match seeds.get(&*arg) {
-        Some(f) => f(x, y),
-        None => false
-    }
 }
 
 impl Grid {

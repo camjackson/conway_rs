@@ -1,4 +1,17 @@
+use std::env;
 use rand;
+
+pub fn get_fn() -> Option<fn(i16, i16) -> bool> {
+    match env::args().nth(1) {
+        Some(arg) => match &*arg {
+            "random" => Some(random),
+            "diehard" => Some(diehard),
+            "gosper_glider" => Some(gosper_glider),
+            _ => None
+        },
+        None => None
+    }
+}
 
 pub fn random(_: i16, _: i16) -> bool {
     rand::random::<u8>() % 2 == 0
