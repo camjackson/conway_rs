@@ -9,11 +9,11 @@ Run it with `cargo run <seed_name>`. Valid seeds are `random`, `diehard`, and `g
 
 From a random seed:
 
-[!random image](random.png)
+![random image](random.png)
 
 From the glider seed:
 
-[!glider image](glider.png)
+![glider image](glider.png)
 
 The code looks OK to me, but I'm still learning the basics of Rust, so I'd be keen to get any feedback (or even pull
 requests!) to help me improve the code :)
