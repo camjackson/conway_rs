@@ -5,7 +5,7 @@ leading up to the first stable release.
 
 It has a 128x96 grid, wrapping on both axes, and rendered using OpenGL, with [glium](http://github.com/tomaka/glium).
 
-Run it with `cargo run <seed_name>`. Valid seeds are `random`, `diehard`, and `gosper_glider`.
+Run it with `cargo run [seed_name]`. Valid seeds are `random`, `diehard`, and `gosper_glider`. The default is `random`.
 
 I've only tested it on OSX so far, but it should work on Windows & Linux as well. I think.
 

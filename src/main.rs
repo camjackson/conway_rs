@@ -61,14 +61,11 @@ fn main() {
         let now = precise_time_ns();
         accumulator += now - previous_clock;
         previous_clock = now;
-
         const FIXED_TIME_STAMP: u64 = 16666667; //every 16.67ms, or 60fps
+
         while accumulator >= FIXED_TIME_STAMP {
             accumulator -= FIXED_TIME_STAMP;
-
             grid.update();
         }
-
-//        thread::sleep_ms(((FIXED_TIME_STAMP - accumulator) / 1000000) as u32);
     }
 }

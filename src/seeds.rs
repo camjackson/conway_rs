@@ -9,7 +9,7 @@ pub fn get_fn() -> Option<fn(i16, i16) -> bool> {
             "gosper_glider" => Some(gosper_glider),
             _ => None
         },
-        None => None
+        None => Some(random)
     }
 }
 
