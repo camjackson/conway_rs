@@ -7,13 +7,15 @@ It has a 128x96 grid, wrapping on both axes, and rendered using OpenGL, with [gl
 
 Run it with `cargo run <seed_name>`. Valid seeds are `random`, `diehard`, and `gosper_glider`.
 
+I've only tested it on OSX so far, but it should work on Windows & Linux as well. I think.
+
 From a random seed:
 
 ![random image](random.png)
 
 From the glider seed:
 
-![glider image](glider.png)
+![glider image](gliders.png)
 
 The code looks OK to me, but I'm still learning the basics of Rust, so I'd be keen to get any feedback (or even pull
 requests!) to help me improve the code :)
