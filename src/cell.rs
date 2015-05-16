@@ -1,6 +1,7 @@
 pub struct Cell {
     pub x: f32,
     pub y: f32,
+    pub scale: f32,
     pub neighbours: Vec<usize>,
     pub alive: bool,
 }

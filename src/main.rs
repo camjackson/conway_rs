@@ -24,9 +24,7 @@ fn main() {
         .build_glium()
         .unwrap();
 
-    let square_size = 16.0;
-
-    let (vertices, indices) = square::geometry(&display, square_size);
+    let (vertices, indices) = square::geometry(&display);
     let program = Program::from_source(&display, &shaders::load("vertex"), &shaders::load("fragment"), None).unwrap();
 
     let uniforms = uniform! {
@@ -38,6 +36,7 @@ fn main() {
         ]
     };
 
+    let square_size = 16.0;
     let mut grid = grid::new(128, 96, square_size);
 
     let mut accumulator = 0;

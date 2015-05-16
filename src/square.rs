@@ -8,11 +8,11 @@ use glium::index::TrianglesList;
 
 use cell::Cell;
 
-pub fn geometry(display: &Display, size: f32) -> (VertexBufferAny, IndexBuffer) {
-    (vertices(display, size), indices(display))
+pub fn geometry(display: &Display) -> (VertexBufferAny, IndexBuffer) {
+    (vertices(display), indices(display))
 }
 
-fn vertices(display: &Display, size: f32) -> VertexBufferAny {
+fn vertices(display: &Display) -> VertexBufferAny {
     #[derive(Copy, Clone)]
     struct Vertex {
         position: [f32; 2],
@@ -25,10 +25,10 @@ fn vertices(display: &Display, size: f32) -> VertexBufferAny {
 
     VertexBuffer::new(display,
         vec![
-            Vertex { position: [  0.0,  0.0], color: colour },
-            Vertex { position: [  0.0, size], color: colour },
-            Vertex { position: [ size, size], color: colour },
-            Vertex { position: [ size,  0.0], color: colour },
+            Vertex { position: [ 0.0, 0.0], color: colour },
+            Vertex { position: [ 0.0, 1.0], color: colour },
+            Vertex { position: [ 1.0, 1.0], color: colour },
+            Vertex { position: [ 1.0, 0.0], color: colour },
         ]
     ).into_vertex_buffer_any()
 }
@@ -38,12 +38,13 @@ fn indices(display: &Display) -> IndexBuffer {
 }
 
 pub fn instances(display: &Display, grid: &Vec<Cell>) -> VertexBuffer<Location> {
-    implement_vertex!(Location, world_position);
+    implement_vertex!(Location, world_position, scale);
 
     let mut data = Vec::new();
     for cell in grid.iter().filter(|c| c.alive) {
         data.push(Location {
-            world_position: [cell.x, cell.y]
+            world_position: [cell.x, cell.y],
+            scale: cell.scale,
         })
     }
 
@@ -53,4 +54,5 @@ pub fn instances(display: &Display, grid: &Vec<Cell>) -> VertexBuffer<Location> 
 #[derive(Copy, Clone)]
 pub struct Location {
     world_position: [f32; 2],
+    scale: f32,
 }
