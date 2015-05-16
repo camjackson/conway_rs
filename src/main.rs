@@ -36,7 +36,7 @@ fn main() {
     };
 
     let square_size = 16.0;
-    let mut grid = grid::new(128, 96, square_size);
+    let mut grid = grid::Grid::new(128, 96, square_size);
 
     loop {
         let instances = square::instances(&display, &grid.cells);
