@@ -1,13 +1,12 @@
 #[macro_use]
 extern crate glium;
 extern crate glutin;
-extern crate clock_ticks;
 extern crate rand;
 
+use std::env;
 use glium::DisplayBuild;
 use glium::Surface;
 use glium::Program;
-use clock_ticks::precise_time_ns;
 
 mod shaders;
 mod square;
@@ -21,6 +20,7 @@ fn main() {
     let display = glutin::WindowBuilder::new()
         .with_dimensions(width as u32, height as u32)
         .with_title(format!("Hello, world!"))
+        .with_vsync()
         .build_glium()
         .unwrap();
 
@@ -37,10 +37,7 @@ fn main() {
     };
 
     let square_size = 16.0;
-    let mut grid = grid::new(128, 96, square_size);
-
-    let mut accumulator = 0;
-    let mut previous_clock = precise_time_ns();
+    let mut grid = grid::Grid::new(128, 96, square_size, env::args().nth(1).unwrap_or("random".to_string()));
 
     loop {
         let instances = square::instances(&display, &grid.cells);
@@ -57,14 +54,6 @@ fn main() {
             }
         }
 
-        let now = precise_time_ns();
-        accumulator += now - previous_clock;
-        previous_clock = now;
-        const FIXED_TIME_STAMP: u64 = 16666667; //every 16.67ms, or 60fps
-
-        while accumulator >= FIXED_TIME_STAMP {
-            accumulator -= FIXED_TIME_STAMP;
-            grid.update();
-        }
+        grid.update();
     }
 }

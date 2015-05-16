@@ -1,14 +1,10 @@
-use std::env;
 use rand;
 
-pub fn get_fn() -> Option<fn(i16, i16) -> bool> {
-    match env::args().nth(1) {
-        Some(arg) => match &*arg {
-            "random" => Some(random),
-            "gosper_glider" => Some(gosper_glider),
-            _ => None
-        },
-        None => Some(random)
+pub fn get_fn(seed: String) -> Option<fn(i16, i16) -> bool> {
+    match &*seed {
+        "random" => Some(random),
+        "gosper_glider" => Some(gosper_glider),
+        _ => None
     }
 }
 
