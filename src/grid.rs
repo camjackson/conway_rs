@@ -14,10 +14,10 @@ fn coords_to_index(coords: (i16, i16), grid_width: i16, grid_height: i16) -> usi
 }
 
 impl Grid {
-    pub fn new(width: i16, height: i16, square_size: f32) -> Grid {
+    pub fn new(width: i16, height: i16, square_size: f32, seed: String) -> Grid {
         let mut cells = Vec::new();
 
-        let starts_alive = match seeds::get_fn() {
+        let starts_alive = match seeds::get_fn(seed) {
             Some(f) => f,
             None => panic!("Invalid seed name! Valid seeds are random or gosper_glider")
         };

@@ -3,6 +3,7 @@ extern crate glium;
 extern crate glutin;
 extern crate rand;
 
+use std::env;
 use glium::DisplayBuild;
 use glium::Surface;
 use glium::Program;
@@ -36,7 +37,7 @@ fn main() {
     };
 
     let square_size = 16.0;
-    let mut grid = grid::Grid::new(128, 96, square_size);
+    let mut grid = grid::Grid::new(128, 96, square_size, env::args().nth(1).unwrap_or("random".to_string()));
 
     loop {
         let instances = square::instances(&display, &grid.cells);
