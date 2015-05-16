@@ -22,7 +22,7 @@ mod tests {
     use super::Cell;
 
     fn new_cell(alive: bool) -> Cell {
-        Cell { x: 0f32, y: 0f32, neighbours: Vec::new(), alive: alive }
+        Cell { x: 0., y: 0., scale: 1., neighbours: Vec::new(), alive: alive }
     }
 
     #[test]
