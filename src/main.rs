@@ -28,7 +28,7 @@ fn main() {
     let program = Program::from_source(&display, &shaders::load("vertex"), &shaders::load("fragment"), None).unwrap();
 
     let uniforms = uniform! {
-        transform: [
+        view_transform: [
             [1.0 / width, 0.0         , 0.0, 0.0],
             [0.0        , 1.0 / height, 0.0, 0.0],
             [0.0        , 0.0         , 1.0, 0.0],
