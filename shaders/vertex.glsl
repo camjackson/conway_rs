@@ -13,5 +13,3 @@ void main() {
     gl_Position = view_transform * vec4(model_position + model_scale * vertex_position, 0.0, 1.0);
     vColor = vertex_color;
 }
-
-

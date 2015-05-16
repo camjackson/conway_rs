@@ -25,10 +25,10 @@ fn vertices(display: &Display) -> VertexBufferAny {
 
     VertexBuffer::new(display,
         vec![
-            Vertex { vertex_position: [ 0.0, 0.0], vertex_color: colour },
-            Vertex { vertex_position: [ 0.0, 1.0], vertex_color: colour },
-            Vertex { vertex_position: [ 1.0, 1.0], vertex_color: colour },
-            Vertex { vertex_position: [ 1.0, 0.0], vertex_color: colour },
+            Vertex { vertex_position: [ -0.5,  0.5], vertex_color: colour },
+            Vertex { vertex_position: [  0.5,  0.5], vertex_color: colour },
+            Vertex { vertex_position: [  0.5, -0.5], vertex_color: colour },
+            Vertex { vertex_position: [ -0.5, -0.5], vertex_color: colour },
         ]
     ).into_vertex_buffer_any()
 }

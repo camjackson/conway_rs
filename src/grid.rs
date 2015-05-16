@@ -10,14 +10,14 @@ pub fn new(width: i16, height: i16, square_size: f32) -> Grid {
 
     let starts_alive = match seeds::get_fn() {
         Some(f) => f,
-        None => panic!("You must provide a seed name! Valid seeds are random, diehard, and gosper_glider")
+        None => panic!("Invalid seed name! Valid seeds are random or gosper_glider")
     };
 
     for y in (0i16 .. height) {
         for x in (0i16 .. width) {
             cells.push(Cell {
-                x: (x - width / 2) as f32 * square_size,
-                y: (y - height / 2) as f32 * square_size,
+                x: (x as f32 * square_size + square_size / 2.0),
+                y: -(y as f32 * square_size + square_size / 2.0),
                 scale: square_size,
                 neighbours: [
                     (x-1, y-1), (x, y-1), (x+1, y-1),
