@@ -25,7 +25,7 @@ fn main() {
         .unwrap();
 
     let (vertices, indices) = square::geometry(&display);
-    let program = Program::from_source(&display, &shaders::load("vertex"), &shaders::load("fragment"), None).unwrap();
+    let program = Program::from_source(&display, shaders::VERTEX, shaders::FRAGMENT, None).unwrap();
 
     let uniforms = uniform! {
         view_transform: [
