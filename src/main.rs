@@ -9,6 +9,7 @@ use glium::Surface;
 use glium::Program;
 use clock_ticks::precise_time_ns;
 use std::env;
+use grid::Grid;
 
 mod shaders;
 mod square;
@@ -43,7 +44,7 @@ fn main() {
     };
 
     let square_size = 16.0;
-    let mut grid = grid::new(seed, 128, 96, square_size);
+    let mut grid = Grid::new(seed, 128, 96, square_size);
 
     let mut accumulator = 0;
     let mut previous_clock = precise_time_ns();
