@@ -5,27 +5,6 @@ pub struct Grid {
     pub cells: Vec<Cell>,
 }
 
-pub fn new(seed: seeds::Seed, width: i16, height: i16, square_size: f32) -> Grid {
-    let mut cells = Vec::new();
-
-    for y in (0i16 .. height) {
-        for x in (0i16 .. width) {
-            cells.push(Cell {
-                x: (x as f32 * square_size + square_size / 2.0),
-                y: -(y as f32 * square_size + square_size / 2.0),
-                scale: square_size,
-                neighbours: [
-                    (x-1, y-1), (x, y-1), (x+1, y-1),
-                    (x-1, y  ),           (x+1, y  ),
-                    (x-1, y+1), (x, y+1), (x+1, y+1)
-                ].iter().map(|n| coords_to_index(*n, width, height)).collect(),
-                alive: seed(x, y),
-            });
-        }
-    }
-    Grid{ cells: cells }
-}
-
 fn coords_to_index(coords: (i16, i16), grid_width: i16, grid_height: i16) -> usize {
     let (x, y) = coords;
     let x_wrapped = (x + grid_width) % grid_width;
@@ -34,6 +13,27 @@ fn coords_to_index(coords: (i16, i16), grid_width: i16, grid_height: i16) -> usi
 }
 
 impl Grid {
+    pub fn new(seed: seeds::Seed, width: i16, height: i16, square_size: f32) -> Grid {
+        let mut cells = Vec::new();
+
+        for y in (0i16 .. height) {
+            for x in (0i16 .. width) {
+                cells.push(Cell {
+                    x: (x as f32 * square_size + square_size / 2.0),
+                    y: -(y as f32 * square_size + square_size / 2.0),
+                    scale: square_size,
+                    neighbours: [
+                        (x-1, y-1), (x, y-1), (x+1, y-1),
+                        (x-1, y  ),           (x+1, y  ),
+                        (x-1, y+1), (x, y+1), (x+1, y+1)
+                    ].iter().map(|n| coords_to_index(*n, width, height)).collect(),
+                    alive: seed(x, y),
+                });
+            }
+        }
+        Grid{ cells: cells }
+    }
+
     pub fn update(&mut self) {
         let mut alive_neighbours = Vec::new();
         for cell in self.cells.iter() {
