@@ -5,13 +5,8 @@ pub struct Grid {
     pub cells: Vec<Cell>,
 }
 
-pub fn new(width: i16, height: i16, square_size: f32) -> Grid {
+pub fn new(seed: seeds::Seed, width: i16, height: i16, square_size: f32) -> Grid {
     let mut cells = Vec::new();
-
-    let starts_alive = match seeds::get_fn() {
-        Some(f) => f,
-        None => panic!("Invalid seed name! Valid seeds are random or gosper_glider")
-    };
 
     for y in (0i16 .. height) {
         for x in (0i16 .. width) {
@@ -24,7 +19,7 @@ pub fn new(width: i16, height: i16, square_size: f32) -> Grid {
                     (x-1, y  ),           (x+1, y  ),
                     (x-1, y+1), (x, y+1), (x+1, y+1)
                 ].iter().map(|n| coords_to_index(*n, width, height)).collect(),
-                alive: starts_alive(x, y),
+                alive: seed(x, y),
             });
         }
     }
