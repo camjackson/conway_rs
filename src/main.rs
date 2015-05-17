@@ -8,6 +8,7 @@ use glium::DisplayBuild;
 use glium::Surface;
 use glium::Program;
 use clock_ticks::precise_time_ns;
+use std::env;
 
 mod shaders;
 mod square;
@@ -18,6 +19,11 @@ mod seeds;
 fn main() {
     let width = 1024.0;
     let height = 768.0;
+
+    let seed = env::args().nth(1).map(|s|
+        seeds::named(&s).expect("Invalid seed name! Valid seeds are random or gosper_glider")
+    ).unwrap_or(seeds::random);
+
     let display = glutin::WindowBuilder::new()
         .with_dimensions(width as u32, height as u32)
         .with_title(format!("Hello, world!"))
@@ -37,7 +43,7 @@ fn main() {
     };
 
     let square_size = 16.0;
-    let mut grid = grid::new(128, 96, square_size);
+    let mut grid = grid::new(seed, 128, 96, square_size);
 
     let mut accumulator = 0;
     let mut previous_clock = precise_time_ns();
