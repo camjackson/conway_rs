@@ -1,82 +1,124 @@
-use cell::Cell;
 use seeds;
 
-pub struct Grid {
-    pub cells: Vec<Cell>,
-}
+pub type Location = (i16, i16);
 
-fn coords_to_index(coords: (i16, i16), grid_width: i16, grid_height: i16) -> usize {
-    let (x, y) = coords;
-    let x_wrapped = (x + grid_width) % grid_width;
-    let y_wrapped = (y + grid_height) % grid_height;
-    (x_wrapped + (y_wrapped * grid_width)) as usize
+#[derive(PartialEq, Eq, Clone)]
+pub struct Grid {
+    width: u16,
+    height: u16,
+    cells: Vec<bool>,
 }
 
 impl Grid {
-    pub fn new(seed: seeds::Seed, width: i16, height: i16, square_size: f32) -> Grid {
-        let mut cells = Vec::new();
+    pub fn new(seed: seeds::Seed, width: u16, height: u16) -> Grid {
+        let mut cells = Vec::with_capacity((width * height) as usize);
 
-        for y in (0i16 .. height) {
-            for x in (0i16 .. width) {
-                cells.push(Cell {
-                    x: (x as f32 * square_size + square_size / 2.0),
-                    y: -(y as f32 * square_size + square_size / 2.0),
-                    scale: square_size,
-                    neighbours: [
-                        (x-1, y-1), (x, y-1), (x+1, y-1),
-                        (x-1, y  ),           (x+1, y  ),
-                        (x-1, y+1), (x, y+1), (x+1, y+1)
-                    ].iter().map(|n| coords_to_index(*n, width, height)).collect(),
-                    alive: seed(x, y),
-                });
+        for y in (0 .. height) {
+            for x in (0 .. width) {
+                cells.push(seed(x as i16, y as i16));
             }
         }
-        Grid{ cells: cells }
+        Grid {
+            width: width,
+            height: height,
+            cells: cells
+        }
     }
 
     pub fn update(&mut self) {
-        let mut alive_neighbours = Vec::new();
-        for cell in self.cells.iter() {
-            alive_neighbours.push(cell.neighbours.iter().filter(|n| self.cells[**n].alive).count())
+        let mut alive_neighbours = vec![0; self.width as usize * self.height as usize];
+        for y in 0..self.height {
+            for x in 0..self.width {
+                let location = (x as i16, y as i16);
+                alive_neighbours[self.idx(location)] = self.alive_neighbours(location);
+            }
         }
 
-        for (cell, cell_alive_neighbours) in self.cells.iter_mut().zip(alive_neighbours.iter()) {
-            cell.update(*cell_alive_neighbours)
+        for (cell, alive_neighbours) in self.cells.iter_mut().zip(alive_neighbours.into_iter()) {
+            *cell = match (*cell, alive_neighbours) {
+                (false, 3) => true,
+                (true, 2) => true,
+                (true, 3) => true,
+                _ => false,
+            };
         }
+    }
+
+    #[inline]
+    pub fn width(&self) -> u16 { self.width }
+    #[inline]
+    pub fn height(&self) -> u16 { self.height }
+
+    pub fn get(&self, location: Location) -> bool {
+        let idx = self.idx(location);
+        self.cells[idx]
+    }
+
+    fn neighbours_of(&self, location: Location) -> [Location; 8] {
+        let (x, y) = location;
+        [
+            (x-1, y-1), (x, y-1), (x+1, y-1),
+            (x-1, y  ),           (x+1, y  ),
+            (x-1, y+1), (x, y+1), (x+1, y+1)
+        ]
+    }
+
+    fn alive_neighbours(&self, location: Location) -> usize {
+        self.neighbours_of(location).iter().filter(|&&loc| self.get(loc)).count()
+    }
+
+    fn idx(&self, location: Location) -> usize {
+        let (x, y) = location;
+        let width = self.width as i16;
+        let height = self.height as i16;
+        let x = (x + width) % width;
+        let y = (y + height) % height;
+        (x + (y * width)) as usize
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::coords_to_index;
+    use super::*;
+
+    fn default_grid() -> Grid {
+        fn my_seed(x: i16, y: i16) -> bool {
+            match (x, y) {
+                (0, 0) => true,
+                _ => false,
+            }
+        }
+
+        Grid::new(my_seed, 5, 3)
+    }
 
     #[test]
     fn it_returns_the_x_value_on_the_first_row() {
-        assert!(coords_to_index((3, 0), 5, 3) == 3)
+        assert_eq!(3, default_grid().idx((3, 0)))
     }
 
     #[test]
     fn it_wraps_overflowing_x_values() {
-        assert!(coords_to_index((6, 0), 5, 3) == 1)
+        assert_eq!(1, default_grid().idx((6,0)))
     }
 
     #[test]
     fn it_wraps_underflowing_x_values() {
-        assert!(coords_to_index((-1, 0), 5, 3) == 4)
+        assert_eq!(4, default_grid().idx((-1, 0)))
     }
 
     #[test]
     fn it_adds_one_width_for_each_row() {
-        assert!(coords_to_index((2, 2), 5, 3) == 12)
+        assert_eq!(12, default_grid().idx((2, 2)))
     }
 
     #[test]
     fn it_wraps_overflowing_y_values() {
-        assert!(coords_to_index((1, 5), 5, 3) == 11)
+        assert_eq!(11, default_grid().idx((1, 5)))
     }
 
     #[test]
     fn it_wraps_underflowing_y_values() {
-        assert!(coords_to_index((4, -2), 5, 3) == 9)
+        assert_eq!(9, default_grid().idx((4, -2)))
     }
 }
