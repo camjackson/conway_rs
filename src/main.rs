@@ -14,7 +14,6 @@ use grid::Grid;
 mod shaders;
 mod square;
 mod grid;
-mod cell;
 mod seeds;
 
 fn main() {
@@ -44,13 +43,13 @@ fn main() {
     };
 
     let square_size = 16.0;
-    let mut grid = Grid::new(seed, 128, 96, square_size);
+    let mut grid = Grid::new(seed, 128, 96);
 
     let mut accumulator = 0;
     let mut previous_clock = precise_time_ns();
 
     loop {
-        let instances = square::instances(&display, &grid.cells);
+        let instances = square::instances(&display, square_size,  &grid);
 
         let mut frame = display.draw();
         frame.clear_color(1.0, 1.0, 1.0, 1.0);
