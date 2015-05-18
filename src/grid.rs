@@ -1,26 +1,19 @@
 use cell::Cell;
-use seeds;
+use seeds::Seed;
 
 pub struct Grid {
     pub cells: Vec<Cell>,
 }
 
-fn coords_to_index(coords: (i16, i16), grid_width: i16, grid_height: i16) -> usize {
-    let (x, y) = coords;
-    let x_wrapped = (x + grid_width) % grid_width;
-    let y_wrapped = (y + grid_height) % grid_height;
-    (x_wrapped + (y_wrapped * grid_width)) as usize
-}
-
 impl Grid {
-    pub fn new(seed: seeds::Seed, width: i16, height: i16, square_size: f32) -> Grid {
+    pub fn new(seed: Seed, width: i16, height: i16, square_size: f32) -> Grid {
         let mut cells = Vec::new();
 
-        for y in (0i16 .. height) {
-            for x in (0i16 .. width) {
+        for y in (0..height) {
+            for x in (0..width) {
                 cells.push(Cell {
-                    x: (x as f32 * square_size + square_size / 2.0),
-                    y: -(y as f32 * square_size + square_size / 2.0),
+                    x: (x as f32 * square_size + square_size / 2.),
+                    y: -(y as f32 * square_size + square_size / 2.),
                     scale: square_size,
                     neighbours: [
                         (x-1, y-1), (x, y-1), (x+1, y-1),
@@ -44,6 +37,13 @@ impl Grid {
             cell.update(*cell_alive_neighbours)
         }
     }
+}
+
+fn coords_to_index(coords: (i16, i16), grid_width: i16, grid_height: i16) -> usize {
+    let (x, y) = coords;
+    let x_wrapped = (x + grid_width) % grid_width;
+    let y_wrapped = (y + grid_height) % grid_height;
+    (x_wrapped + (y_wrapped * grid_width)) as usize
 }
 
 #[cfg(test)]
