@@ -6,6 +6,5 @@ authors = ["Cam Jackson <camjackson89@gmail.com>"]
 
 [dependencies]
 rand = "*"
-clock_ticks = "*"
 glium = "*"
 glutin = "*"

@@ -1,14 +1,14 @@
 #[macro_use]
 extern crate glium;
 extern crate glutin;
-extern crate clock_ticks;
 extern crate rand;
 
 use glium::DisplayBuild;
 use glium::Surface;
 use glium::Program;
-use clock_ticks::precise_time_ns;
 use std::env;
+use std::thread;
+use std::sync::{Arc, Mutex};
 use grid::Grid;
 
 mod shaders;
@@ -16,6 +16,8 @@ mod square;
 mod grid;
 mod cell;
 mod seeds;
+
+const UPDATES_PER_SECOND: u32 = 30;
 
 fn main() {
     let width = 1024.0;
@@ -28,6 +30,7 @@ fn main() {
     let display = glutin::WindowBuilder::new()
         .with_dimensions(width as u32, height as u32)
         .with_title(format!("Hello, world!"))
+        .with_vsync()
         .build_glium()
         .unwrap();
 
@@ -44,13 +47,26 @@ fn main() {
     };
 
     let square_size = 16.0;
-    let mut grid = Grid::new(seed, 128, 96, square_size);
 
-    let mut accumulator = 0;
-    let mut previous_clock = precise_time_ns();
+    // Arc is needed until thread::scoped is stable
+    let grid = Arc::new(Mutex::new(Grid::new(seed, 128, 96, square_size)));
+
+    {
+        let grid = grid.clone();
+        // Spawn off thread to update the grid. Main thread will be in charge of rendering
+        thread::spawn(move || {
+            loop {
+                thread::sleep_ms(1000 / UPDATES_PER_SECOND);
+                grid.lock().unwrap().update();
+            }
+        });
+    }
 
     loop {
-        let instances = square::instances(&display, &grid.cells);
+        let instances = {
+            let grid = grid.lock().unwrap();
+            square::instances(&display, &grid.cells)
+        };
 
         let mut frame = display.draw();
         frame.clear_color(1.0, 1.0, 1.0, 1.0);
@@ -62,16 +78,6 @@ fn main() {
                 glutin::Event::Closed => return,
                 _ => ()
             }
-        }
-
-        let now = precise_time_ns();
-        accumulator += now - previous_clock;
-        previous_clock = now;
-        const FIXED_TIME_STAMP: u64 = 16666667; //every 16.67ms, or 60fps
-
-        while accumulator >= FIXED_TIME_STAMP {
-            accumulator -= FIXED_TIME_STAMP;
-            grid.update();
         }
     }
 }
