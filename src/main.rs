@@ -18,6 +18,7 @@ mod cell;
 mod seeds;
 
 const UPDATES_PER_SECOND: u32 = 30;
+const SQUARE_SIZE: f32 = 16.0;
 
 fn main() {
     let width = 1024.0;
@@ -46,10 +47,12 @@ fn main() {
         ]
     };
 
-    let square_size = 16.0;
-
     // Arc is needed until thread::scoped is stable
-    let grid = Arc::new(Mutex::new(Grid::new(seed, 128, 96, square_size)));
+    let divider = (SQUARE_SIZE / 2.0) as i16;
+    assert!(SQUARE_SIZE >= 2.0, "SQUARE_SIZE may not be smaller than 2.0");
+    let grid = Arc::new(Mutex::new(Grid::new(seed, width as i16 / divider, 
+                                                   height as i16 / divider,
+                                                   SQUARE_SIZE)));
 
     {
         let grid = grid.clone();
