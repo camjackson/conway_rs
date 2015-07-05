@@ -3,11 +3,12 @@ use seeds::Seed;
 
 pub struct Grid {
     pub cells: Vec<Cell>,
+    pub alive_neighbours: Vec<usize>,
 }
 
 impl Grid {
     pub fn new(seed: Seed, width: i16, height: i16, square_size: f32) -> Grid {
-        let mut cells = Vec::new();
+        let mut cells = Vec::with_capacity((width * height) as usize);
 
         for y in (0..height) {
             for x in (0..width) {
@@ -24,16 +25,21 @@ impl Grid {
                 });
             }
         }
-        Grid{ cells: cells }
+        Grid { 
+            cells: cells,
+            alive_neighbours: Vec::new() 
+        }
     }
 
     pub fn update(&mut self) {
-        let mut alive_neighbours = Vec::new();
-        for cell in self.cells.iter() {
-            alive_neighbours.push(cell.neighbours.iter().filter(|n| self.cells[**n].alive).count())
+        self.alive_neighbours.clear();
+        let cells = &mut self.cells;
+        
+        for cell in cells.iter() {
+            self.alive_neighbours.push(cell.neighbours.iter().filter(|n| unsafe { cells.get_unchecked(**n) }.alive).count())
         }
 
-        for (cell, cell_alive_neighbours) in self.cells.iter_mut().zip(alive_neighbours.iter()) {
+        for (cell, cell_alive_neighbours) in cells.iter_mut().zip(self.alive_neighbours.iter()) {
             cell.update(*cell_alive_neighbours)
         }
     }
