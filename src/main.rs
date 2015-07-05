@@ -59,8 +59,9 @@ fn main() {
         // Spawn off thread to update the grid. Main thread will be in charge of rendering
         thread::spawn(move || {
             loop {
+                let mut grid = grid.lock().unwrap();
+                grid.update();
                 thread::sleep_ms(1000 / UPDATES_PER_SECOND);
-                grid.lock().unwrap().update();
             }
         });
     }
