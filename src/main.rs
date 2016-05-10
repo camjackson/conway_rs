@@ -8,6 +8,7 @@ use glium::Surface;
 use glium::Program;
 use std::env;
 use std::thread;
+use std::time::Duration;
 use std::sync::{Arc, Mutex};
 use grid::Grid;
 
@@ -17,8 +18,9 @@ mod grid;
 mod cell;
 mod seeds;
 
-const UPDATES_PER_SECOND: u32 = 30;
+const UPDATES_PER_SECOND: u64 = 30;
 
+#[allow(unused_variables)]
 fn main() {
     let width = 1024.0;
     let height = 768.0;
@@ -56,7 +58,8 @@ fn main() {
         // Spawn off thread to update the grid. Main thread will be in charge of rendering
         thread::spawn(move || {
             loop {
-                thread::sleep_ms(1000 / UPDATES_PER_SECOND);
+                let sleep_duration = Duration::from_millis(1000 / UPDATES_PER_SECOND);
+                std::thread::sleep(sleep_duration);
                 grid.lock().unwrap().update();
             }
         });
@@ -70,12 +73,21 @@ fn main() {
 
         let mut frame = display.draw();
         frame.clear_color(1.0, 1.0, 1.0, 1.0);
-        frame.draw((&vertices, instances.per_instance_if_supported().unwrap()), &indices, &program, &uniforms, &std::default::Default::default()).unwrap();
-        frame.finish();
+
+        frame.draw((&vertices,
+                    instances.per_instance().unwrap()),
+                   &indices,
+                   &program,
+                   &uniforms,
+                   &std::default::Default::default()).unwrap();
+
+        frame.finish().unwrap();
 
         for event in display.poll_events() {
             match event {
                 glutin::Event::Closed => return,
+                glutin::Event::KeyboardInput(glutin::ElementState::Pressed, _,
+                                             Some(glutin::VirtualKeyCode::Escape)) => return,
                 _ => ()
             }
         }
