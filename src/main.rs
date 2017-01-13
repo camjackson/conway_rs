@@ -19,6 +19,7 @@ mod cell;
 mod seeds;
 
 const UPDATES_PER_SECOND: u64 = 30;
+const SQUARE_SIZE: f32 = 16.0;
 
 #[allow(unused_variables)]
 fn main() {
@@ -48,19 +49,22 @@ fn main() {
         ]
     };
 
-    let square_size = 16.0;
-
     // Arc is needed until thread::scoped is stable
-    let grid = Arc::new(Mutex::new(Grid::new(seed, 128, 96, square_size)));
+    let divider = (SQUARE_SIZE / 2.0) as i16;
+    assert!(SQUARE_SIZE >= 2.0, "SQUARE_SIZE may not be smaller than 2.0");
+    let grid = Arc::new(Mutex::new(Grid::new(seed, width as i16 / divider,
+                                                   height as i16 / divider,
+                                                   SQUARE_SIZE)));
 
     {
         let grid = grid.clone();
         // Spawn off thread to update the grid. Main thread will be in charge of rendering
         thread::spawn(move || {
             loop {
+                let mut grid = grid.lock().unwrap();
+                grid.update();
                 let sleep_duration = Duration::from_millis(1000 / UPDATES_PER_SECOND);
                 std::thread::sleep(sleep_duration);
-                grid.lock().unwrap().update();
             }
         });
     }
