@@ -9,8 +9,8 @@ impl Grid {
     pub fn new(seed: Seed, width: i16, height: i16, square_size: f32) -> Grid {
         let mut cells = Vec::new();
 
-        for y in (0..height) {
-            for x in (0..width) {
+        for y in 0..height {
+            for x in 0..width {
                 cells.push(Cell {
                     x: (x as f32 * square_size + square_size / 2.),
                     y: -(y as f32 * square_size + square_size / 2.),
