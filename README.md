@@ -1,3 +1,5 @@
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
 # Conway's Game of Life in Rust!
 
 This is my first attempt at making something real in Rust, built using various Rust nightlies in the month or so
